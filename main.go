@@ -76,7 +76,7 @@ func main() {
 func FindNoteID(key, deckName, fieldName string) (int, error) {
 	// Perform query
 	params := map[string]interface{}{
-		"query": "added:1 " + fieldName + ": Key:" + key + " deck:" + deckName, // Cards added today with an empty sentence field
+		"query": fmt.Sprintf("%s:<b>%s</b> OR (Word:%s Sentence:) added:1 deck:%s", fieldName, key, key, deckName),
 	}
 	fmt.Printf("Query: %v", params)
 	res, err := InvokeAnkiRequest("findNotes", params)

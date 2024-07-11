@@ -31,32 +31,32 @@ func InvokeAnkiRequest(action string, params map[string]interface{}) (json.RawMe
 	// Create request
 	jsonData, err := json.Marshal(CreateAnkiRequest(action, params))
 	if err != nil {
-		return json.RawMessage{}, fmt.Errorf("Could not marshal json: %w", err)
+		return json.RawMessage{}, fmt.Errorf("Could not marshal json: %w\n", err)
 	}
 
 	// Send request
 	res, err := http.Post("http://127.0.0.1:8765", "application/json", bytes.NewReader(jsonData))
 	if err != nil {
-		return json.RawMessage{}, fmt.Errorf("Failed to send request: %w", err)
+		return json.RawMessage{}, fmt.Errorf("Failed to send request: %w\n", err)
 	}
 
 	// Read response body
 	defer res.Body.Close()
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		return json.RawMessage{}, fmt.Errorf("Failed to read body of response: %w", err)
+		return json.RawMessage{}, fmt.Errorf("Failed to read body of response: %w\n", err)
 	}
 
 	// Decode response
 	var data *AnkiResponse
 	err = json.Unmarshal(resBody, &data)
 	if err != nil {
-		return json.RawMessage{}, fmt.Errorf("Failed to unmarshal json: %w", err)
+		return json.RawMessage{}, fmt.Errorf("Failed to unmarshal json: %w\n", err)
 	}
 
 	// Return result upon success
 	if data.Error != nil {
-		return json.RawMessage{}, fmt.Errorf("Anki-Connect error: " + *data.Error)
+		return json.RawMessage{}, fmt.Errorf("Anki-Connect error: %s\n", *data.Error)
 	}
 	return data.Result, nil
 }
