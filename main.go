@@ -10,6 +10,7 @@ import (
 	"golang.design/x/clipboard"
 
 	"encoding/csv"
+	"encoding/json"
 )
 
 func main() {
@@ -64,6 +65,33 @@ func main() {
 			log.Printf("Failed to update note: %s\n", err)
 		}
 	}
+}
+
+// Performs Anki search and returns the first note ID found
+func FindNoteID(key string, deckName string) (int, error) {
+	// Perform query
+	params := map[string]interface{}{
+		"query": "added:1 Sentence: Key:" + key + " deck:" + deckName, // Cards added today with an empty sentence field
+	}
+	fmt.Printf("Query: %v", params)
+	res, err := InvokeAnkiRequest("findNotes", params)
+	if err != nil {
+		return -1, fmt.Errorf("Failed to search for note: %w", err)
+	}
+
+	// Decode response
+	var result []int
+	err = json.Unmarshal(res, &result)
+	if err != nil {
+		return -1, fmt.Errorf("Failed to unmarshal json: %w", err)
+	}
+
+	// Return first result upon success
+	if len(result) == 0 {
+		return -1, fmt.Errorf("No notes found matching search query %v", params)
+	}
+	id := result[0]
+	return id, nil
 }
 
 func CreateWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string, error) {
