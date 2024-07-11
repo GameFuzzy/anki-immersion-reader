@@ -16,12 +16,17 @@ import (
 func main() {
 	// Retrieve arguments
 	if len(os.Args) < 2 {
-		panic(errors.New("Not enough arguments provided (expected path to AnkiDojo export file"))
+		panic(errors.New("Not enough arguments provided (expected ./anki-immersion-reader filepath [deck] [field]"))
 	}
 
 	deckName := "current"
 	if len(os.Args) > 2 {
 		deckName = os.Args[2]
+	}
+
+	fieldName := "Sentence"
+	if len(os.Args) > 3 {
+		fieldName = os.Args[3]
 	}
 
 	// Create map from words to sentences
@@ -46,7 +51,7 @@ func main() {
 	fmt.Scanln()
 
 	for word, sentence := range wordSentenceMap {
-		id, err := FindNoteID(word, deckName)
+		id, err := FindNoteID(word, deckName, fieldName)
 		if err != nil {
 			log.Printf("Failed to find note: %s\n", err)
 			continue
@@ -68,10 +73,10 @@ func main() {
 }
 
 // Performs Anki search and returns the first note ID found
-func FindNoteID(key string, deckName string) (int, error) {
+func FindNoteID(key, deckName, fieldName string) (int, error) {
 	// Perform query
 	params := map[string]interface{}{
-		"query": "added:1 Sentence: Key:" + key + " deck:" + deckName, // Cards added today with an empty sentence field
+		"query": "added:1 " + fieldName + ": Key:" + key + " deck:" + deckName, // Cards added today with an empty sentence field
 	}
 	fmt.Printf("Query: %v", params)
 	res, err := InvokeAnkiRequest("findNotes", params)

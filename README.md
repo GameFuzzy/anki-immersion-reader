@@ -4,21 +4,25 @@
 
 The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases).
 
-```
-./anki-immersion-reader filepath [deck]
+```sh
+./anki-immersion-reader filepath [deck] [field]
 ```
 
-with `filepath` being the path to the CSV file exported by AnkiDojo and `deck` being the name of your mining deck in Anki.
-
-If `deck` is omitted then deck:current is used.
+with `filepath` being the path to the CSV file exported by AnkiDojo,
+`deck` being the name of your mining deck in Anki,
+and
 
 ### Notes
-The script currently assumes that the sentence field in your deck is named "Sentence"
+
+If `deck` is omitted then "deck:current" will be used.
+If `field` is omitted then the sentence field will be assumed to be "Sentence".
 
 ## Build from source
 
 ### Build prerequisites
+
 Go 1.22.0
 
 ### Instructions
+
 ```go build```
