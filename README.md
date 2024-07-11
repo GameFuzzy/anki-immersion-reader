@@ -14,8 +14,8 @@ and
 
 ### Notes
 
-- If `deck` is omitted then "deck:current" will be used.
-- If `field` is omitted then the sentence field will be assumed to be "Sentence".
+- If `deck` is omitted then "deck:current" is used.
+- If `field` is omitted then the sentence field is be assumed to be "Sentence".
 
 ## Build from source
 
