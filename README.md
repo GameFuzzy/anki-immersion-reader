@@ -12,6 +12,9 @@ with `filepath` being the path to the CSV file exported by AnkiDojo and `deck` b
 
 If `deck` is omitted then deck:current is used.
 
+### Notes
+The script currently assumes that the sentence field in your deck is named "Sentence"
+
 ## Build from source
 
 ### Build prerequisites
