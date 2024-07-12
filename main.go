@@ -19,13 +19,16 @@ func main() {
 		panic(errors.New("Not enough arguments provided (expected ./anki-immersion-reader filepath deck [field]"))
 	}
 
+	filePath := os.Args[1]
+	deckName := os.Args[2]
+
 	fieldName := "Sentence"
 	if len(os.Args) > 3 {
 		fieldName = os.Args[3]
 	}
 
 	// Create map from words to sentences
-	wordSentenceMap, err := CreateWordSentenceMapFromAnkiDojoExport(os.Args[1])
+	wordSentenceMap, err := CreateWordSentenceMapFromAnkiDojoExport(filePath)
 
 	// Make array of just words
 	keys := make([]string, 0, len(wordSentenceMap))
