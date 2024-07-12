@@ -12,7 +12,7 @@
 The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases).
 
 ```sh
-./anki-immersion-reader filepath deck [field]
+./anki-immersion-reader_<OS>_<ARCH>[.exe] filepath deck [field]
 ```
 
 with `filepath` being the path to the CSV file exported by AnkiDojo,
