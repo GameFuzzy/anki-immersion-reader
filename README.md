@@ -1,5 +1,12 @@
 # anki-immersion-reader
 
+## Description
+
+### What the script does:
+1. Copies a list of all the words in the provided CSV file exported by Immersion Reader and prompts you to paste them into Yomitan's word generator and hit generate.
+2. Waits for the user to hit enter to continue.
+3. Once the user has done so it adds the sentences extracted from the CSV file to the newly created Anki cards.
+
 ## Usage
 
 The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases).
@@ -14,9 +21,9 @@ with `filepath` being the path to the CSV file exported by AnkiDojo,
 
 and `field` being the name of your note type's sentence field.
 
-### Notes
+### Notes:
 
-- `field` will default to "Sentence" if omitted
+- `field` will default to "Sentence" if omitted.
 
 ## Build from source
 
