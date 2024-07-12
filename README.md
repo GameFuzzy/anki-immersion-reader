@@ -1,5 +1,7 @@
 # anki-immersion-reader
 
+![Latest build](https://github.com/GameFuzzy/anki-immersion-reader/actions/workflows/go.yml/badge.svg)
+
 ## Description
 
 ### What the script does:
@@ -9,7 +11,7 @@
 
 ## Usage
 
-The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases/latest).
+Prebuilt binaries for most platforms can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases/latest). You can also build it from source as described [further down on this page](https://github.com/GameFuzzy/anki-immersion-reader/edit/main/README.md#build-from-source).
 
 ```sh
 ./anki-immersion-reader_<OS>_<ARCH>[.exe] filepath deck [field]
