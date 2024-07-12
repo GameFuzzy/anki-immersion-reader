@@ -85,19 +85,19 @@ func findNoteID(key, deckName, fieldName string) (int, error) {
 	}
 	res, err := InvokeAnkiRequest("findNotes", params)
 	if err != nil {
-		return -1, fmt.Errorf("Failed to search for note: %w", err)
+		return -1, fmt.Errorf("Failed to search for note: %w\n", err)
 	}
 
 	// Decode response
 	var result []int
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return -1, fmt.Errorf("Failed to unmarshal json: %w", err)
+		return -1, fmt.Errorf("Failed to unmarshal json: %w\n", err)
 	}
 
 	// Return first result upon success
 	if len(result) == 0 {
-		return -1, fmt.Errorf(`No notes found matching search query "%s"`, query)
+		return -1, fmt.Errorf("No notes found matching search query \"%s\"\n", query)
 	}
 	id := result[0]
 	return id, nil
