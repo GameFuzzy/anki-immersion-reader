@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Create map from words to sentences
-	wordSentenceMap, err := CreateWordSentenceMapFromAnkiDojoExport(filePath)
+	wordSentenceMap, err := createWordSentenceMapFromAnkiDojoExport(filePath)
 
 	// Make array of just words
 	keys := make([]string, 0, len(wordSentenceMap))
@@ -49,13 +49,13 @@ func main() {
 	fmt.Scanln()
 
 	for word, sentence := range wordSentenceMap {
-		id, err := FindNoteID(word, deckName, fieldName)
+		id, err := findNoteID(word, deckName, fieldName)
 		if err != nil {
 			log.Printf("Failed to find note:\n%v\n", err)
 			continue
 		}
 
-		err = UpdateNoteSentence(id, sentence)
+		err = updateNoteSentence(id, sentence)
 		if err != nil {
 			log.Printf("Failed to update note:\n%v\n", err)
 		}
@@ -63,7 +63,7 @@ func main() {
 }
 
 // Updates sentence field of the Anki note with the given ID
-func UpdateNoteSentence(id int, sentence string) error {
+func updateNoteSentence(id int, sentence string) error {
 	params := map[string]interface{}{
 		"note": map[string]interface{}{
 			"id": id,
@@ -77,7 +77,7 @@ func UpdateNoteSentence(id int, sentence string) error {
 }
 
 // Performs Anki search and returns the first note ID found
-func FindNoteID(key, deckName, fieldName string) (int, error) {
+func findNoteID(key, deckName, fieldName string) (int, error) {
 	// Perform query
 	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s Sentence:) is:new deck:%s", fieldName, key, fieldName, key, key, deckName)
 	params := map[string]interface{}{
@@ -103,7 +103,7 @@ func FindNoteID(key, deckName, fieldName string) (int, error) {
 	return id, nil
 }
 
-func CreateWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string, error) {
+func createWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string, error) {
 	// Read file
 	f, err := os.Open(filePath)
 	if err != nil {
