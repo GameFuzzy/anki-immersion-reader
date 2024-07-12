@@ -9,7 +9,7 @@
 
 ## Usage
 
-The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases).
+The binary can be found [here](https://github.com/GameFuzzy/anki-immersion-reader/releases/latest).
 
 ```sh
 ./anki-immersion-reader_<OS>_<ARCH>[.exe] filepath deck [field]
