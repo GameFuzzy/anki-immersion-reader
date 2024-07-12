@@ -15,13 +15,8 @@ import (
 
 func main() {
 	// Retrieve arguments
-	if len(os.Args) < 2 {
-		panic(errors.New("Not enough arguments provided (expected ./anki-immersion-reader filepath [deck] [field]"))
-	}
-
-	deckName := "current"
-	if len(os.Args) > 2 {
-		deckName = os.Args[2]
+	if len(os.Args) < 3 {
+		panic(errors.New("Not enough arguments provided (expected ./anki-immersion-reader filepath deck [field]"))
 	}
 
 	fieldName := "Sentence"
