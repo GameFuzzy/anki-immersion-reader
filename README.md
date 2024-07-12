@@ -29,10 +29,10 @@ and `field` being the name of your note type's sentence field.
 
 ## Build from source
 
-### Build prerequisites
+### Build prerequisites:
 
 Go 1.22.0
 
-### Instructions
+### Instructions:
 
 ```go build```
