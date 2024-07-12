@@ -1,6 +1,6 @@
 # anki-immersion-reader
 
-![Latest build](https://github.com/GameFuzzy/anki-immersion-reader/actions/workflows/go.yml/badge.svg)
+[![Create release](https://github.com/GameFuzzy/anki-immersion-reader/actions/workflows/go.yml/badge.svg?branch=main&event=push)](https://github.com/GameFuzzy/anki-immersion-reader/actions/workflows/go.yml)
 
 ## Description
 
