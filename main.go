@@ -53,47 +53,53 @@ func main() {
 	for word, sentence := range wordSentenceMap {
 		id, err := FindNoteID(word, deckName, fieldName)
 		if err != nil {
-			log.Printf("Failed to find note: %s\n", err)
+			log.Printf("Failed to find note:\n%v\n", err)
 			continue
 		}
 
-		params := map[string]interface{}{
-			"note": map[string]interface{}{
-				"id": id,
-				"fields": map[string]interface{}{
-					"Sentence": sentence,
-				},
-			},
-		}
-		_, err = InvokeAnkiRequest("updateNoteFields", params)
+		err = UpdateNoteSentence(id, sentence)
 		if err != nil {
-			log.Printf("Failed to update note: %s\n", err)
+			log.Printf("Failed to update note:\n%v\n", err)
 		}
 	}
+}
+
+// Updates sentence field of the Anki note with the given ID
+func UpdateNoteSentence(id int, sentence string) error {
+	params := map[string]interface{}{
+		"note": map[string]interface{}{
+			"id": id,
+			"fields": map[string]interface{}{
+				"Sentence": sentence,
+			},
+		},
+	}
+	_, err := InvokeAnkiRequest("updateNoteFields", params)
+	return err
 }
 
 // Performs Anki search and returns the first note ID found
 func FindNoteID(key, deckName, fieldName string) (int, error) {
 	// Perform query
+	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s Sentence:) added:1 deck:%s", fieldName, key, fieldName, key, key, deckName)
 	params := map[string]interface{}{
-		"query": fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s Sentence:) added:1 deck:%s", fieldName, key, fieldName, key, key, deckName),
+		"query": query,
 	}
-	fmt.Printf("Query: %v", params)
 	res, err := InvokeAnkiRequest("findNotes", params)
 	if err != nil {
-		return -1, fmt.Errorf("Failed to search for note: %w\n", err)
+		return -1, fmt.Errorf("Failed to search for note: %w", err)
 	}
 
 	// Decode response
 	var result []int
 	err = json.Unmarshal(res, &result)
 	if err != nil {
-		return -1, fmt.Errorf("Failed to unmarshal json: %w\n", err)
+		return -1, fmt.Errorf("Failed to unmarshal json: %w", err)
 	}
 
 	// Return first result upon success
 	if len(result) == 0 {
-		return -1, fmt.Errorf("No notes found matching search query %v\n", params)
+		return -1, fmt.Errorf(`No notes found matching search query "%s"`, query)
 	}
 	id := result[0]
 	return id, nil
