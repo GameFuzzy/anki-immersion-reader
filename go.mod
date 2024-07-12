@@ -1,4 +1,4 @@
-module anki-immersion-reader
+module github.com/GameFuzzy/anki-immersion-reader
 
 go 1.22.0
 
