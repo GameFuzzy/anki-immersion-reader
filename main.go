@@ -43,7 +43,7 @@ func main() {
 	}
 	clipboard.Write(clipboard.FmtText, []byte(strings.Join(keys, "\n")))
 
-	fmt.Println("Word list has been copied to the clipboard. Paste it into Yomitan's word generator and send the words to Anki")
+	fmt.Println("Word list has been copied to the clipboard. Paste it into Yomitan's word generator and send the words to Anki.")
 	fmt.Println("Press enter to continue once you've done the above...")
 	// Wait for input
 	fmt.Scanln()
@@ -103,6 +103,7 @@ func findNoteID(key, deckName, fieldName string) (int, error) {
 	return id, nil
 }
 
+// Returns map of words to sentences given the path of an AnkiDojo CSV file
 func createWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string, error) {
 	// Read file
 	f, err := os.Open(filePath)
