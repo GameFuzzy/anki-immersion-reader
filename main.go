@@ -55,7 +55,7 @@ func main() {
 			continue
 		}
 
-		err = updateNoteSentence(id, sentence)
+		err = updateNoteSentence(id, sentence, fieldName)
 		if err != nil {
 			log.Printf("Failed to update note:\n%v\n", err)
 		}
@@ -63,12 +63,12 @@ func main() {
 }
 
 // Updates sentence field of the Anki note with the given ID
-func updateNoteSentence(id int, sentence string) error {
+func updateNoteSentence(id int, sentence, fieldName string) error {
 	params := map[string]interface{}{
 		"note": map[string]interface{}{
 			"id": id,
 			"fields": map[string]interface{}{
-				"Sentence": sentence,
+				fieldName: sentence,
 			},
 		},
 	}
