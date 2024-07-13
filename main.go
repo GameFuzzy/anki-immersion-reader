@@ -79,7 +79,7 @@ func updateNoteSentence(id int, sentence string) error {
 // Performs Anki search and returns the first note ID found
 func findNoteID(key, deckName, fieldName string) (int, error) {
 	// Perform query
-	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s Sentence:) is:new deck:%s", fieldName, key, fieldName, key, key, deckName)
+	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s %s:) is:new deck:%s", fieldName, key, fieldName, key, key, fieldName, deckName)
 	params := map[string]interface{}{
 		"query": query,
 	}
