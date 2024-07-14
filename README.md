@@ -27,7 +27,7 @@ gh attestation verify anki-immersion-reader_<OS>_<ARCH>[.exe] -R GameFuzzy/anki-
 
 ## Usage
 
-```sh
+```text
 ./anki-immersion-reader_<OS>_<ARCH>[.exe] [options] filepath deck
   -r string
         shorthand for -sentence_reading (default "SentenceReading")
