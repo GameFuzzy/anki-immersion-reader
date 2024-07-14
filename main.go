@@ -1,7 +1,7 @@
 package main
 
 import (
-	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -10,25 +10,56 @@ import (
 	"golang.design/x/clipboard"
 
 	"encoding/csv"
-	"encoding/json"
 )
 
-func main() {
+var sentenceField string
+var sentenceReadingField string
+
+var filePath string
+var deckName string
+
+const (
+	AnkiDojoWordColumn     = 1
+	AnkiDojoSentenceColumn = 3
+)
+
+func init() {
+
+	flag.Usage = func() {
+		w := flag.CommandLine.Output()
+
+		fmt.Fprintf(w, "Usage: %s [options] file_path deck\n", os.Args[0])
+
+		flag.PrintDefaults()
+	}
+
+	const (
+		defaultSentenceField        = "Sentence"
+		defaultSentenceReadingField = "SentenceReading"
+	)
+
+	flag.StringVar(&sentenceField, "sentence", defaultSentenceField, "Name of your note type's sentence field")
+	flag.StringVar(&sentenceField, "s", defaultSentenceField, "shorthand for -sentence")
+
+	flag.StringVar(&sentenceReadingField, "sentence_reading", defaultSentenceReadingField, "Name of your note type's sentence reading field")
+	flag.StringVar(&sentenceReadingField, "r", defaultSentenceReadingField, "shorthand for -sentence_reading")
+
+	flag.Parse()
+
 	// Retrieve arguments
-	if len(os.Args) < 3 {
-		panic(errors.New("Not enough arguments provided (expected ./anki-immersion-reader filepath deck [field]"))
+	if flag.NArg() < 2 {
+		flag.Usage()
+		os.Exit(1)
 	}
 
-	filePath := os.Args[1]
-	deckName := os.Args[2]
+	filePath = flag.Arg(0)
+	deckName = flag.Arg(1)
+}
 
-	fieldName := "Sentence"
-	if len(os.Args) > 3 {
-		fieldName = os.Args[3]
-	}
+func main() {
 
 	// Create map from words to sentences
-	wordSentenceMap, err := createWordSentenceMapFromAnkiDojoExport(filePath)
+	wordSentenceMap, err := createWordSentenceMapFromAnkiDojoExport()
 
 	// Make array of just words
 	keys := make([]string, 0, len(wordSentenceMap))
@@ -49,62 +80,30 @@ func main() {
 	fmt.Scanln()
 
 	for word, sentence := range wordSentenceMap {
-		id, err := findNoteID(word, deckName, fieldName)
+		id, err := FindNoteID(word, deckName)
 		if err != nil {
 			log.Printf("Failed to find note:\n%v\n", err)
 			continue
 		}
 
-		err = updateNoteSentence(id, sentence, fieldName)
+		if sentenceReadingField != "" {
+			err = UpdateNoteFields(id, map[string]interface{}{
+				sentenceField:        sentence,
+				sentenceReadingField: "",
+			})
+		} else {
+			err = UpdateNoteFields(id, map[string]interface{}{
+				sentenceField: sentence,
+			})
+		}
 		if err != nil {
 			log.Printf("Failed to update note:\n%v\n", err)
 		}
 	}
 }
 
-// Updates sentence field of the Anki note with the given ID
-func updateNoteSentence(id int, sentence, fieldName string) error {
-	params := map[string]interface{}{
-		"note": map[string]interface{}{
-			"id": id,
-			"fields": map[string]interface{}{
-				fieldName: sentence,
-			},
-		},
-	}
-	_, err := InvokeAnkiRequest("updateNoteFields", params)
-	return err
-}
-
-// Performs Anki search and returns the first note ID found
-func findNoteID(key, deckName, fieldName string) (int, error) {
-	// Perform query
-	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s %s:) is:new deck:%s", fieldName, key, fieldName, key, key, fieldName, deckName)
-	params := map[string]interface{}{
-		"query": query,
-	}
-	res, err := InvokeAnkiRequest("findNotes", params)
-	if err != nil {
-		return -1, fmt.Errorf("Failed to search for note: %w\n", err)
-	}
-
-	// Decode response
-	var result []int
-	err = json.Unmarshal(res, &result)
-	if err != nil {
-		return -1, fmt.Errorf("Failed to unmarshal json: %w\n", err)
-	}
-
-	// Return first result upon success
-	if len(result) == 0 {
-		return -1, fmt.Errorf("No notes found matching search query \"%s\"\n", query)
-	}
-	id := result[0]
-	return id, nil
-}
-
 // Returns map of words to sentences given the path of an AnkiDojo CSV file
-func createWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string, error) {
+func createWordSentenceMapFromAnkiDojoExport() (map[string]string, error) {
 	// Read file
 	f, err := os.Open(filePath)
 	if err != nil {
@@ -124,7 +123,7 @@ func createWordSentenceMapFromAnkiDojoExport(filePath string) (map[string]string
 	// Create map
 	m := make(map[string]string)
 	for _, row := range data {
-		m[row[0]] = row[3]
+		m[row[AnkiDojoWordColumn]] = row[AnkiDojoSentenceColumn]
 	}
 
 	return m, nil

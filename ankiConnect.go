@@ -60,3 +60,42 @@ func InvokeAnkiRequest(action string, params map[string]interface{}) (json.RawMe
 	}
 	return data.Result, nil
 }
+
+// Updates fields of the Anki note with the given ID
+func UpdateNoteFields(id int, fields map[string]interface{}) error {
+	params := map[string]interface{}{
+		"note": map[string]interface{}{
+			"id":     id,
+			"fields": fields,
+		},
+	}
+	_, err := InvokeAnkiRequest("updateNoteFields", params)
+	return err
+}
+
+// Performs Anki search and returns the first note ID found
+func FindNoteID(key, deckName string) (int, error) {
+	// Perform query
+	query := fmt.Sprintf("%s:<b>%s</b> OR %s:%s OR (Word:%s %s:) is:new deck:%s", sentenceField, key, sentenceField, key, key, sentenceField, deckName)
+	params := map[string]interface{}{
+		"query": query,
+	}
+	res, err := InvokeAnkiRequest("findNotes", params)
+	if err != nil {
+		return -1, fmt.Errorf("Failed to search for note: %w\n", err)
+	}
+
+	// Decode response
+	var result []int
+	err = json.Unmarshal(res, &result)
+	if err != nil {
+		return -1, fmt.Errorf("Failed to unmarshal json: %w\n", err)
+	}
+
+	// Return first result upon success
+	if len(result) == 0 {
+		return -1, fmt.Errorf("No notes found matching search query \"%s\"\n", query)
+	}
+	id := result[0]
+	return id, nil
+}
