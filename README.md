@@ -17,7 +17,7 @@ Prebuilt binaries for most platforms can be found [here](https://github.com/Game
 
 You can also build it from source as described [further down on this page](#build-from-source).
 
-### (Optional) Verify binary checksum
+### (Optional) Verify binary checksum against CI
 
 Requires [GitHub CLI](https://cli.github.com)
 
