@@ -19,7 +19,7 @@ var filePath string
 var deckName string
 
 const (
-	AnkiDojoWordColumn     = 1
+	AnkiDojoWordColumn     = 0
 	AnkiDojoSentenceColumn = 3
 )
 
